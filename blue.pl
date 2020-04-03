@@ -199,7 +199,6 @@ factoryGetColor([[OtherColor,Count]|FactoryR], Color, Table, TableResult) :-
     pushNColorVector(Table,OtherColor,Count,TableResultTemp),
     factoryGetColor(FactoryR,Color,TableResultTemp,TableResult).
 
-<<<<<<< HEAD
 
 
 % =======
@@ -227,7 +226,6 @@ pushColorPL(PL, [Color, PushCount], Pos, Wall, F, FR, C, CR, PLR) :-
 
 
 
-=======
 % =====
 % COVER
 % =====
@@ -262,4 +260,3 @@ initializeGame(Players,Factories,Bag,Cover) :-
     initializebag(BagTemp),
     makeNFactories(9,BagTemp,Factories,Bag),
     !.
->>>>>>> 2816ba863abcab40f0f457f5024496589481d971
