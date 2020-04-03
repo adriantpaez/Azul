@@ -184,3 +184,22 @@ factoryGetColor([[OtherColor,Count]|FactoryR], Color, Table, TableResult) :-
     pushNColorVector(Table,OtherColor,Count,TableResultTemp),
     factoryGetColor(FactoryR,Color,TableResultTemp,TableResult).
     
+
+% initializeGame(Players,Factories,Bag)
+% Preparar Partida
+% Players: lista de jugadores
+% Factories: Estado inicial de las factorias. La cntidad de factorias depende 
+%            de la cantidad de jugadores
+% Bag: Estado de la bolsa luego de formar las factorias
+
+initializeGame(2,Factories,Bag) :-
+    initializebag(BagTemp),
+    makeNFactories(5,BagTemp,Factories,Bag).
+
+initializeGame(3,Factories,Bag) :-
+    initializebag(BagTemp),
+    makeNFactories(7,BagTemp,Factories,Bag).
+    
+initializeGame(4,Factories,Bag) :-
+    initializebag(BagTemp),
+    makeNFactories(9,BagTemp,Factories,Bag).
