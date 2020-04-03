@@ -190,12 +190,13 @@ factoryGetColor([[OtherColor,Count]|FactoryR], Color, Table, TableResult) :-
 
 coverEmpty(Cover) :- colorVector(Cover).
 
-% initializeGame(Players,Factories,Bag)
+% initializeGame(Players,Factories,Bag,Cover)
 % Preparar Partida
 % Players: lista de jugadores
 % Factories: Estado inicial de las factorias. La cntidad de factorias depende 
 %            de la cantidad de jugadores
 % Bag: Estado de la bolsa luego de formar las factorias
+% Cover: Tapa del juego, es donde se ponen las fichas sobrantes de la ronda
 
 initializeGame(Players,Factories,Bag,Cover) :-
     length(Players,2),
