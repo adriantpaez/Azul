@@ -1,6 +1,12 @@
 
 :- ["utils.pl"].
 
+getIndex(azul,0).
+getIndex(amarillo,1).
+getIndex(rojo,2).
+getIndex(negro,3).
+getIndex(blanco,4).
+
 % ==========
 % COLORTUPLE
 % ==========
@@ -33,6 +39,16 @@ pushNColorVector([[Color,Count]|ColorVector],Color,N,[[Color,NewCount]|ColorVect
 
 pushNColorVector([[OtherColor,Count]|ColorVector],Color,N,[[OtherColor,Count]|ColorVectorResult]) :- 
     pushNColorVector(ColorVector,Color,N,ColorVectorResult).
+
+% popColor(ColorVector,Color,ColorVectorResult,Count)
+% Remueve todos los azulejos de color Color de ColorVector. Devolviendo en ColorVectorResult
+% el vector resultante y en Count la cantidad removida.
+% 
+popColor([],_,[],_) :- !.
+popColor([[Color,Count]|ColorVector],Color,[[Color,0]|ColorVectorTemp],Count) :-
+    popColor(ColorVector,Color,ColorVectorTemp,_), !.
+popColor([[OtherColor,OtherCount]|ColorVector],Color,[[OtherColor,OtherCount]|ColorVectorTemp],Count) :-
+    popColor(ColorVector,Color,ColorVectorTemp,Count).
 
 % =====
 % FLOOR
@@ -126,6 +142,16 @@ takeNBag([BagVector,Mask], Count, Factory,FactoryResult ,[BagVectorResult,MaskRe
     NewCount is Count - 1,
     takeNBag([BagVectorTemp,MaskTemp],NewCount,FactoryTemp,FactoryResult,[BagVectorResult,MaskResult]).
 
+% =====
+% TABLE
+% =====
+
+table(Table) :-
+    colorVector(Table).
+
+tablePopColor(Table,Color,TableResult,Count) :-
+    popColor(Table,Color,TableResult,Count).
+
 % =======
 % FACTORY
 % =======
@@ -141,9 +167,20 @@ makeNFactories(N,Bag,[FactoryResult|RFactoryList],BagResult) :-
     NewN is N - 1,
     makeNFactories(NewN,RBagResult,RFactoryList,BagResult).
 
+% Devuelve la cantidad de azulejos del color Color hay en Factory
+% 
+factoryGetColorCount(Factory,Color,Count) :-
+    getIndex(Color, Index),
+    getByIndex(Factory,Index,[_,Count]).
 
-getIndex(azul,0).
-getIndex(amarillo,1).
-getIndex(rojo,2).
-getIndex(negro,3).
-getIndex(blanco,4).
+% Toma todas las fichas de Color de la Factory y el resto las pone en la mesa
+% 
+factoryGetColor([],_,Table,Table) :- !.
+
+factoryGetColor([[Color,_]|FactoryR], Color, Table, TableResult) :-
+    factoryGetColor(FactoryR,Color,Table,TableResult), !.
+
+factoryGetColor([[OtherColor,Count]|FactoryR], Color, Table, TableResult) :-
+    pushNColorVector(Table,OtherColor,Count,TableResultTemp),
+    factoryGetColor(FactoryR,Color,TableResultTemp,TableResult).
+    
