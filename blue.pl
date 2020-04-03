@@ -199,6 +199,7 @@ factoryGetColor([[OtherColor,Count]|FactoryR], Color, Table, TableResult) :-
     pushNColorVector(Table,OtherColor,Count,TableResultTemp),
     factoryGetColor(FactoryR,Color,TableResultTemp,TableResult).
 
+<<<<<<< HEAD
 
 
 % =======
@@ -226,3 +227,39 @@ pushColorPL(PL, [Color, PushCount], Pos, Wall, F, FR, C, CR, PLR) :-
 
 
 
+=======
+% =====
+% COVER
+% =====
+
+coverEmpty(Cover) :- colorVector(Cover).
+
+% initializeGame(Players,Factories,Bag,Cover)
+% Preparar Partida
+% Players: lista de jugadores
+% Factories: Estado inicial de las factorias. La cntidad de factorias depende 
+%            de la cantidad de jugadores
+% Bag: Estado de la bolsa luego de formar las factorias
+% Cover: Tapa del juego, es donde se ponen las fichas sobrantes de la ronda
+
+initializeGame(Players,Factories,Bag,Cover) :-
+    length(Players,2),
+    coverEmpty(Cover),
+    initializebag(BagTemp),
+    makeNFactories(5,BagTemp,Factories,Bag),
+    !.
+
+initializeGame(Players,Factories,Bag,Cover) :-
+    length(Players,3),
+    coverEmpty(Cover),
+    initializebag(BagTemp),
+    makeNFactories(7,BagTemp,Factories,Bag),
+    !.
+    
+initializeGame(Players,Factories,Bag,Cover) :-
+    length(Players,4),
+    coverEmpty(Cover),
+    initializebag(BagTemp),
+    makeNFactories(9,BagTemp,Factories,Bag),
+    !.
+>>>>>>> 2816ba863abcab40f0f457f5024496589481d971
