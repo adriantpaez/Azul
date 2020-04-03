@@ -68,6 +68,21 @@ floorPoint([[true,Value]|R],Points) :-
     floorPoint(R,RPoints),
     Points is RPoints + Value.
 
+%pushFloor(F, N, FR)
+%Coloca N azulejos en F y el resultado lo devuelve en FR
+%
+
+pushFloor([[false, Points]|Rest], [_,0], [[true, Points]|Rest], Cover, Cover):-!.
+
+pushFloor([], [Color, N], [], Cover, CoverResult) :- pushNColorVector(Cover, Color, N, CoverResult).
+
+pushFloor([[false, points]|Rest], [Color, N], [[true, points]|ResultRest], Cover, CoverResult) :-   NewN is N-1, 
+                                                                                                    pushFloor(Rest, [Color, NewN], ResultRest, Cover, CoverResult).
+
+pushFloor([[true, Points]|Rest], ColorTuple, [[true, Points]|ResultRest], Cover, CoverResult) :- pushFloor(Rest, ColorTuple, ResultRest, Cover, CoverResult).
+
+
+
 % ====
 % WALL
 % ====
@@ -183,4 +198,31 @@ factoryGetColor([[Color,_]|FactoryR], Color, Table, TableResult) :-
 factoryGetColor([[OtherColor,Count]|FactoryR], Color, Table, TableResult) :-
     pushNColorVector(Table,OtherColor,Count,TableResultTemp),
     factoryGetColor(FactoryR,Color,TableResultTemp,TableResult).
-    
+
+
+
+% =======
+% PATTERN-LINE
+% =======
+
+%initializePL
+%Inicializa el Pattern Line con el límite posible de azulejos a colocar: la posición + 1 y el espacio vacío correspondiente al color
+
+initializePL([[],1], [[],2], [[],3], [[],4], [[],5]).
+
+%pushColorPL(PL, [Color, Count], Pos, Wall, Floor, FloorResult, Cover, CoverResult, PLResult)
+
+pushColorPL([[_, Count]|Rest], [Color, PushCount], 0, Wall, F, FR, C, CR, [[Color, CountResult]|Rest]):-    getIndex(Color, Index),                                                                                           getIndex(Color, Index),
+                                                                                                            getByIndex(Wall, Index, 0),
+                                                                                                            Temp is Count-PushCount,
+                                                                                                            max(0, Temp, CountResult),
+                                                                                                            FloorTiles is 0-Temp, 
+                                                                                                            pushFloor(F, FloorTiles, FR, C, CR).
+
+
+pushColorPL([Space|PL], ColorTuple, Pos, Wall, F, FR,C, CR, [Space|PLR]) :- NewPos is Pos-1, 
+                                                                            pushColorPL(PL, ColorTuple, NewPos, Wall, F, FR,C, CR, PLR).
+
+
+
+
