@@ -72,11 +72,11 @@ floorPoint([[true,Value]|R],Points) :-
 %Coloca N azulejos en F y el resultado lo devuelve en FR
 %
 
-pushFloor([[false, Points]|Rest], [_,0], [[true, Points]|Rest], Cover, Cover):-!.
+pushFloor(R, [_,0], R, Cover, Cover):-!.
 
-pushFloor([], [Color, N], [], Cover, CoverResult) :- pushNColorVector(Cover, Color, N, CoverResult).
+pushFloor([], [Color, N], [], Cover, CoverResult) :- pushNCover(Cover, Color, N, CoverResult).
 
-pushFloor([[false, points]|Rest], [Color, N], [[true, points]|ResultRest], Cover, CoverResult) :-   NewN is N-1, 
+pushFloor([[false, Points]|Rest], [Color, N], [[true, Points]|ResultRest], Cover, CoverResult) :-   NewN is N-1, 
                                                                                                     pushFloor(Rest, [Color, NewN], ResultRest, Cover, CoverResult).
 
 pushFloor([[true, Points]|Rest], ColorTuple, [[true, Points]|ResultRest], Cover, CoverResult) :- pushFloor(Rest, ColorTuple, ResultRest, Cover, CoverResult).
@@ -213,24 +213,32 @@ initializePL([[[],1], [[],2], [[],3], [[],4], [[],5]]).
 %pushColorPL(PL, [Color, Count], Pos, Wall, Floor, FloorResult, Cover, CoverResult, PLResult)
 
 pushColorPL(PL, [Color, PushCount], Pos, Wall, F, FR, C, CR, PLR) :- 
-    pushByIndex(PLTemp, Pos, [Color, Count], PL),
+    verifyColor(PL, Pos, [_, Count], PLTemp, Color),
+    !,
     TempCount is Count-PushCount,
     max(0, TempCount, NewCount),
     pushByIndex(PLTemp, Pos, [Color, NewCount], PLR),
     getIndex(Color, IndexTemp),
-    Index is ((Pos-1)*5) + IndexTemp,
+    Index is (Pos*6) + IndexTemp,
     getByIndex(Wall, Index, 0),
     !,
     FloorTiles is 0-TempCount,
-    pushFloor(F, FloorTiles, FR, C, CR).
+    pushFloor(F, [Color, FloorTiles], FR, C, CR).
 
 
+verifyColor(PL, I, [Color, Count], PLR, Color):-
+    pushByIndex(PLR, I, [Color, Count], PL).
+
+verifyColor(PL, I, [[], Count], PLR, _):-
+    pushByIndex(PLR, I, [[], Count], PL).
 
 % =====
 % COVER
 % =====
 
 coverEmpty(Cover) :- colorVector(Cover).
+
+pushNCover(Cover, Color, N, CoverResult):-pushNColorVector(Cover, Color, N, CoverResult).
 
 % initializeGame(Players,Factories,Bag,Cover)
 % Preparar Partida
