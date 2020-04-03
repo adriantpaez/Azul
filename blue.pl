@@ -208,21 +208,21 @@ factoryGetColor([[OtherColor,Count]|FactoryR], Color, Table, TableResult) :-
 %initializePL
 %Inicializa el Pattern Line con el límite posible de azulejos a colocar: la posición + 1 y el espacio vacío correspondiente al color
 
-initializePL([[],1], [[],2], [[],3], [[],4], [[],5]).
+initializePL([[[],1], [[],2], [[],3], [[],4], [[],5]]).
 
 %pushColorPL(PL, [Color, Count], Pos, Wall, Floor, FloorResult, Cover, CoverResult, PLResult)
 
-pushColorPL([[_, Count]|Rest], [Color, PushCount], 0, Wall, F, FR, C, CR, [[Color, CountResult]|Rest]):-    getIndex(Color, Index),                                                                                           getIndex(Color, Index),
-                                                                                                            getByIndex(Wall, Index, 0),
-                                                                                                            Temp is Count-PushCount,
-                                                                                                            max(0, Temp, CountResult),
-                                                                                                            FloorTiles is 0-Temp, 
-                                                                                                            pushFloor(F, FloorTiles, FR, C, CR).
-
-
-pushColorPL([Space|PL], ColorTuple, Pos, Wall, F, FR,C, CR, [Space|PLR]) :- NewPos is Pos-1, 
-                                                                            pushColorPL(PL, ColorTuple, NewPos, Wall, F, FR,C, CR, PLR).
-
+pushColorPL(PL, [Color, PushCount], Pos, Wall, F, FR, C, CR, PLR) :- 
+    pushByIndex(PLTemp, Pos, [Color, Count], PL),
+    TempCount is Count-PushCount,
+    max(0, TempCount, NewCount),
+    pushByIndex(PLTemp, Pos, [Color, NewCount], PLR),
+    getIndex(Color, IndexTemp),
+    Index is ((Pos-1)*5) + IndexTemp,
+    getByIndex(Wall, Index, 0),
+    !,
+    FloorTiles is 0-TempCount,
+    pushFloor(F, FloorTiles, FR, C, CR).
 
 
 

@@ -17,8 +17,14 @@ getByIndex([X|R],I,E) :-
     NewIndex is I-1,
     getByIndex(R,NewIndex,E).
 
+pushByIndex(L, 0, E, [E|L]):-!.
+pushByIndex([X|L], I, E, [X|R]):-
+    NewI is I-1,
+    pushByIndex(L, NewI, E, R).
+
+
 % removeValue(L,X,R)
-% Devuelve en R el resultado de eliminar laprimera ocurrencia de X en L
+% Devuelve en R el resultado de eliminar la primera ocurrencia de X en L
 removeValue([X|R],X,R) :- !.
 
 removeValue([Y|R],X,[Y|ListResult]) :-
