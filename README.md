@@ -3,7 +3,6 @@
 
 ## Tipos y estructuras
 
-### COLOR
 
 El conjunto de colores se define como **`{azul, amarillo, rojo, negro, blanco}`**. Además se mantiene el convenio del orden, por lo que a cada color se le puede asociar un índice : **`azul:0, amarillo:1, rojo:2, negro:3, blanco:4`**.
 
