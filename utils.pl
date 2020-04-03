@@ -42,5 +42,5 @@ countCountinous(W,I,J,T,P) :-
     countCountinous(W,K,J,T,PR), 
     P is PR + 1.
 
-max(A, B, A):- A > B
-max(A, B, B) 
+max(A, B, A):- A > B.
+max(_, B, B)
