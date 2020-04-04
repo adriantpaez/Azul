@@ -121,9 +121,9 @@ wallPoints(W,I,P) :-
 % ===
 
 
-% initializebag(B)
+% initializeBag(B)
 % Genera la bolsa inicial del juego con las 100 fichas, 20 de cada una
-initializebag([[BlueTuple,YellowTuple,RedTuple,BlackTuple, WhiteTuple],[0,1,2,3,4]]) :-
+initializeBag([[BlueTuple,YellowTuple,RedTuple,BlackTuple, WhiteTuple],[0,1,2,3,4]]) :-
     colorTuple(azul,20,BlueTuple),
     colorTuple(amarillo,20,YellowTuple),
     colorTuple(rojo,20,RedTuple),
@@ -251,20 +251,20 @@ pushNCover(Cover, Color, N, CoverResult):-pushNColorVector(Cover, Color, N, Cove
 initializeGame(Players,Factories,Bag,Cover) :-
     length(Players,2),
     coverEmpty(Cover),
-    initializebag(BagTemp),
+    initializeBag(BagTemp),
     makeNFactories(5,BagTemp,Factories,Bag),
     !.
 
 initializeGame(Players,Factories,Bag,Cover) :-
     length(Players,3),
     coverEmpty(Cover),
-    initializebag(BagTemp),
+    initializeBag(BagTemp),
     makeNFactories(7,BagTemp,Factories,Bag),
     !.
     
 initializeGame(Players,Factories,Bag,Cover) :-
     length(Players,4),
     coverEmpty(Cover),
-    initializebag(BagTemp),
+    initializeBag(BagTemp),
     makeNFactories(9,BagTemp,Factories,Bag),
     !.
