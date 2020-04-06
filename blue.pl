@@ -237,27 +237,27 @@ verifyColor(PL, I, [Color, Count], PLR, Color):-
 verifyColor(PL, I, [[], Count], PLR, _):-
     pushByIndex(PLR, I, [[], Count], PL).
 
+%
+%Este es el metodo nuevo
+%
 
-fromPLToWall(PL, PLR, Wall, WallResult, Cover, CoverResult):- 
-    fromPLToWallIndex(4, PL, PLR, Wall, WallResult, Cover, CoverResult).
+fromPLToWall([], [], Wall, Wall, Cover, Cover, Points, Points):-!.
 
-fromPLToWallIndex(-1, PL, PL, Wall, Wall, Cover, Cover):- !.
-
-fromPLToWallIndex(N, PL, PLR, Wall, WallResult, Cover, CoverResult):-
-    getByIndex(PL, N, [Color, 0]), 
+fromPLToWall([ [Color, 0] | PL ], [[[], AllowedCount]|PLR], Wall, WallR, Cover, CoverR, Points, PointsR) :-
     getIndex(Color, Index),
+    length([_|PL], NTemp),
+    N is 5-NTemp,
     NewIndex is (N*6)+Index,
     changeIndex(Wall, NewIndex, 1, WallTemp),
     pushNCover(Cover, Color, N, CoverTemp),
-    AllowedCount is N+1,
-    changeIndex(PL, N, [[], AllowedCount], PLT),
-    NewN is N-1,
-    fromPLToWallIndex(NewN, PLT, PLR, WallTemp, WallResult, CoverTemp, CoverResult),
+    AllowedCount is N + 1,
+    wallPoints(WallTemp, NewIndex, P),
+    fromPLToWall(PL, PLR, WallTemp, WallR, CoverTemp, CoverR, Points, PointsTemp),
+    PointsR is PointsTemp + P,
     !.
 
-fromPLToWallIndex(N, PL, PLR, Wall, WallResult, Cover, CoverResult):-
-    NewN is N-1,
-    fromPLToWallIndex(NewN, PL, PLR, Wall, WallResult, Cover, CoverResult).
+fromPLToWall([[Color, Count]| PL], [[Color, Count]|PLR], Wall, WallR, Cover, CoverR, Points, PointsR):-
+    fromPLToWall(PL, PLR, Wall, WallR, Cover, CoverR, Points, PointsR).
 
 % =====
 % COVER
