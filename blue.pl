@@ -74,12 +74,18 @@ floorPoint([[true,Value]|R],Points) :-
 
 pushFloor(R, [_,0], R, Cover, Cover):-!.
 
-pushFloor([], [Color, N], [], Cover, CoverResult) :- pushNCover(Cover, Color, N, CoverResult).
+pushFloor(R, [_, Count],R, Cover, Cover):- 
+    max(0, Count, 0).
 
-pushFloor([[false, Points]|Rest], [Color, N], [[true, Points]|ResultRest], Cover, CoverResult) :-   NewN is N-1, 
-                                                                                                    pushFloor(Rest, [Color, NewN], ResultRest, Cover, CoverResult).
+pushFloor([], [Color, N], [], Cover, CoverResult) :- 
+    pushNCover(Cover, Color, N, CoverResult).
 
-pushFloor([[true, Points]|Rest], ColorTuple, [[true, Points]|ResultRest], Cover, CoverResult) :- pushFloor(Rest, ColorTuple, ResultRest, Cover, CoverResult).
+pushFloor([[false, Points]|Rest], [Color, N], [[true, Points]|ResultRest], Cover, CoverResult) :-   
+    NewN is N-1, 
+    pushFloor(Rest, [Color, NewN], ResultRest, Cover, CoverResult).
+
+pushFloor([[true, Points]|Rest], ColorTuple, [[true, Points]|ResultRest], Cover, CoverResult) :- 
+    pushFloor(Rest, ColorTuple, ResultRest, Cover, CoverResult).
 
 
 
@@ -213,18 +219,17 @@ initializePL([[[],1], [[],2], [[],3], [[],4], [[],5]]).
 %pushColorPL(PL, [Color, Count], Pos, Wall, Floor, FloorResult, Cover, CoverResult, PLResult)
 
 pushColorPL(PL, [Color, PushCount], Pos, Wall, F, FR, C, CR, PLR) :- 
+    getIndex(Color, IndexTemp),
+    Index is (Pos*6) + IndexTemp,
+    getByIndex(Wall, Index, 0),
+    !,
     verifyColor(PL, Pos, [_, Count], PLTemp, Color),
     !,
     TempCount is Count-PushCount,
     max(0, TempCount, NewCount),
     pushByIndex(PLTemp, Pos, [Color, NewCount], PLR),
-    getIndex(Color, IndexTemp),
-    Index is (Pos*6) + IndexTemp,
-    getByIndex(Wall, Index, 0),
-    !,
     FloorTiles is 0-TempCount,
     pushFloor(F, [Color, FloorTiles], FR, C, CR).
-
 
 verifyColor(PL, I, [Color, Count], PLR, Color):-
     pushByIndex(PLR, I, [Color, Count], PL).
@@ -232,13 +237,39 @@ verifyColor(PL, I, [Color, Count], PLR, Color):-
 verifyColor(PL, I, [[], Count], PLR, _):-
     pushByIndex(PLR, I, [[], Count], PL).
 
+
+fromPLToWall(PL, PLR, Wall, WallResult, Cover, CoverResult):- 
+    fromPLToWallIndex(4, PL, PLR, Wall, WallResult, Cover, CoverResult).
+
+fromPLToWallIndex(-1, PL, PL, Wall, Wall, Cover, Cover):- !.
+
+fromPLToWallIndex(N, PL, PLR, Wall, WallResult, Cover, CoverResult):-
+    getByIndex(PL, N, [Color, 0]), 
+    getIndex(Color, Index),
+    NewIndex is (N*6)+Index,
+    changeIndex(Wall, NewIndex, 1, WallTemp),
+    pushNCover(Cover, Color, N, CoverTemp),
+    AllowedCount is N+1,
+    changeIndex(PL, N, [[], AllowedCount], PLT),
+    NewN is N-1,
+    fromPLToWallIndex(NewN, PLT, PLR, WallTemp, WallResult, CoverTemp, CoverResult),
+    !.
+
+fromPLToWallIndex(N, PL, PLR, Wall, WallResult, Cover, CoverResult):-
+    NewN is N-1,
+    fromPLToWallIndex(NewN, PL, PLR, Wall, WallResult, Cover, CoverResult).
+
 % =====
 % COVER
 % =====
 
 coverEmpty(Cover) :- colorVector(Cover).
 
-pushNCover(Cover, Color, N, CoverResult):-pushNColorVector(Cover, Color, N, CoverResult).
+pushNCover(Cover,Color, N, CoverResult):-pushNColorVector(Cover, Color, N, CoverResult).
+
+%estrategia de elegir factoria
+selectFactory([F1, F2, F3, F4, F5, F6, F7, F8, F9], F1):-!.
+
 
 % initializeGame(Players,Factories,Bag,Cover)
 % Preparar Partida

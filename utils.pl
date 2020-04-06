@@ -17,6 +17,10 @@ getByIndex([X|R],I,E) :-
     NewIndex is I-1,
     getByIndex(R,NewIndex,E).
 
+changeIndex(L, Index, NewE,LR):-
+    pushByIndex(LTemp, Index, _, L),
+    pushByIndex(LTemp, Index, NewE, LR).
+
 pushByIndex(L, 0, E, [E|L]):-!.
 pushByIndex([X|L], I, E, [X|R]):-
     NewI is I-1,
