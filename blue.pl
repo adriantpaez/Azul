@@ -312,10 +312,6 @@ coverEmpty(Cover) :- colorVector(Cover).
 
 pushNCover(Cover,Color, N, CoverResult):-pushNColorVector(Cover, Color, N, CoverResult).
 
-%estrategia de elegir factoria
-selectFactory([F1, F2, F3, F4, F5, F6, F7, F8, F9], F1):-!.
-
-
 % initializeGame(Players,Factories,Bag,Cover)
 % Preparar Partida
 % Players: lista de jugadores
