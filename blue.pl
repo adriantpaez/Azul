@@ -30,6 +30,13 @@ insertTile([Color,ColorCount], Count, [Color,CountResult]) :-
 % 
 colorVector([[azul,0],[amarillo,0],[rojo,0],[negro,0],[blanco,0]]).
 
+% colorVectorTileCount(CV,Count)
+% Count es la cantidad de azulejos que hay en CV
+colorVectorTileCount([[_,Count]],Count) :- !.
+
+colorVectorTileCount([[_,Count]|FactoryR],TotalCount) :-
+    colorVectorTileCount(FactoryR,CountR),
+    TotalCount is Count + CountR.
 
 % pushNColorVector(ColorVector,Color,N,ColorVectorResult)
 % Aumenta en N la cantidad de Color en ColorVector, dando como resultado ColorVectorResult
@@ -39,6 +46,15 @@ pushNColorVector([[Color,Count]|ColorVector],Color,N,[[Color,NewCount]|ColorVect
 
 pushNColorVector([[OtherColor,Count]|ColorVector],Color,N,[[OtherColor,Count]|ColorVectorResult]) :- 
     pushNColorVector(ColorVector,Color,N,ColorVectorResult).
+
+% mergeColorVector(CVA,CVB,CVR)
+% CVR es el resultado de mezclar los ColorVector CVA,CVB, uniendo sus azulejos
+%
+mergeColorVector([],[],[]) :- !.
+
+mergeColorVector([[Color,CountA]|RA],[[Color,CountB]|RB],[[Color,Count]|R]) :-
+    Count is CountA + CountB,
+    mergeColorVector(RA,RB,R).
 
 % popColor(ColorVector,Color,ColorVectorResult,Count)
 % Remueve todos los azulejos de color Color de ColorVector. Devolviendo en ColorVectorResult
@@ -163,6 +179,24 @@ takeNBag([BagVector,Mask], Count, Factory,FactoryResult ,[BagVectorResult,MaskRe
     NewCount is Count - 1,
     takeNBag([BagVectorTemp,MaskTemp],NewCount,FactoryTemp,FactoryResult,[BagVectorResult,MaskResult]).
 
+bagRecalculateMask_aux([],[]) :- !.
+
+bagRecalculateMask_aux([[_,0]|R],NewMask) :-
+    bagRecalculateMask_aux(R,NewMask),
+    !.
+
+bagRecalculateMask_aux([_|R],[Index|NewMask]) :-
+    length(R,L),
+    Index is 4 - L,
+    bagRecalculateMask_aux(R,NewMask).
+
+bagRecalculateMask([CV,_], [CV,Mask]) :-
+    bagRecalculateMask_aux(CV,Mask).
+
+bagMergeWithColorVector(ColorVector,[CV,_],[CVR,MaskR]) :-
+    mergeColorVector(ColorVector,CV,CVR),
+    bagRecalculateMask([CVR,_],[CVR,MaskR]).
+
 % =====
 % TABLE
 % =====
@@ -187,6 +221,17 @@ makeNFactories(N,Bag,[FactoryResult|RFactoryList],BagResult) :-
     takeNBag(Bag,4,Factory,FactoryResult,RBagResult),
     NewN is N - 1,
     makeNFactories(NewN,RBagResult,RFactoryList,BagResult).
+
+% refillFactories(Factoires,Bag,FactoriesResult,BagResult)
+% Rellena todas las factorias con 4 azulejos, tomando azulejos de la bolsa
+%
+refillFactories([],Bag,[],Bag).
+
+refillFactories([Factory|RCurrentFactories],Bag,[FactoryResult|RFactoriesReult],BagResult) :-
+    colorVectorTileCount(Factory,TilesCount),
+    Diff is 4 - TilesCount,
+    takeNBag(Bag,Diff,Factory,FactoryResult,RBagResult),
+    refillFactories(RCurrentFactories,RBagResult,RFactoriesReult,BagResult).
 
 % Devuelve la cantidad de azulejos del color Color hay en Factory
 % 
@@ -299,3 +344,22 @@ initializeGame(Players,Factories,Bag,Cover) :-
     initializeBag(BagTemp),
     makeNFactories(9,BagTemp,Factories,Bag),
     !.
+
+checkEmptyBag([BagCV,BagMask],Cover,BagResult,[],true) :-
+    length(BagMask,0),
+    bagMergeWithColorVector(Cover,[BagCV,BagMask],BagResult),
+    !.
+
+checkEmptyBag([BagCV,BagMask],Cover,[BagCV,BagMask],Cover,false) :-
+    length(BagMask,_),
+    !.
+
+nextRoundContinue(true,Factories,Bag,Cover,FactoriesResult,BagResult,Cover) :-
+    refillFactories(Factories,Bag,FactoriesResult,BagResult).
+
+nextRoundContinue(false,Factories,Bag,Cover,Factories,Bag,Cover) :- !.
+
+nextRound(Factories,Bag,Cover,FactoriesResult,BagResult,CoverResult) :-
+    refillFactories(Factories,Bag,TempFactories,[TempBagCV,TempBagMask]),
+    checkEmptyBag([TempBagCV,TempBagMask], Cover,BagR, CoverR,Result),
+    nextRoundContinue(Result,TempFactories,BagR,CoverR,FactoriesResult,BagResult,CoverResult).
