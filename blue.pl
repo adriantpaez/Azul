@@ -277,6 +277,19 @@ refillFactories([Factory|RCurrentFactories],Bag,[FactoryResult|RFactoriesReult],
     takeNBag(Bag,Diff,Factory,FactoryResult,RBagResult),
     refillFactories(RCurrentFactories,RBagResult,RFactoriesReult,BagResult).
 
+removeEmptyFactories([], _,_, []):-!.
+removeEmptyFactories([X|F], Mask, N, [X|FR]):-
+    member(N, Mask),
+    NewN is N+1,
+    removeEmptyFactories(F, Mask, NewN, FR),
+    !.
+
+removeEmptyFactories([X|F], Mask,N, [K|FR]):-
+    factoryEmpty(K),
+    NewN is N+1,
+    removeEmptyFactories(F, Mask, NewN, FR).
+
+
 % Devuelve la cantidad de azulejos del color Color hay en Factory
 % 
 factoryGetColorCount(Factory,Color,Count) :-
@@ -324,7 +337,7 @@ verifyColor(PL, Pos, Color):-
 
 
 pushColorPL(PL, [Color, PushCount], Pos, Wall, F, FR, C, CR, PLR) :- 
-    pushByIndex(PLTemp, Pos, [_, Count], PL).
+    pushByIndex(PLTemp, Pos, [_, Count], PL),
     TempCount is Count-PushCount,
     max(0, TempCount, NewCount),
     pushByIndex(PLTemp, Pos, [Color, NewCount], PLR),
