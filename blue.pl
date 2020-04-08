@@ -80,7 +80,7 @@ floorPoint([],0) :- !.
 floorPoint([[false,_]|R],Points) :-
     floorPoint(R,Points), !.
 
-floorPoint([[true,Value]|R],Points) :-
+floorPoint([[_,Value]|R],Points) :-
     floorPoint(R,RPoints),
     Points is RPoints + Value.
 
@@ -96,18 +96,62 @@ pushFloor(R, [_, Count],R, Cover, Cover):-
 pushFloor([], [Color, N], [], Cover, CoverResult) :- 
     pushNCover(Cover, Color, N, CoverResult).
 
-pushFloor([[false, Points]|Rest], [Color, N], [[true, Points]|ResultRest], Cover, CoverResult) :-   
+pushFloor([[false, Points]|Rest], [Color, N], [[Color, Points]|ResultRest], Cover, CoverResult) :-   
     NewN is N-1, 
-    pushFloor(Rest, [Color, NewN], ResultRest, Cover, CoverResult).
+    pushFloor(Rest, [Color, NewN], ResultRest, Cover, CoverResult)
+    !.
 
-pushFloor([[true, Points]|Rest], ColorTuple, [[true, Points]|ResultRest], Cover, CoverResult) :- 
+pushFloor([[_, Points]|Rest], ColorTuple, [[_, Points]|ResultRest], Cover, CoverResult) :- 
     pushFloor(Rest, ColorTuple, ResultRest, Cover, CoverResult).
-
 
 
 % ====
 % WALL
 % ====
+newWall(Wall):-
+    newWallN(Wall, 0).
+
+newWallN(WallR, 26):-!.
+
+newWallN([0|WallR], N):-
+    NewN is N+1,
+    newWall(WallR, NewN).
+
+
+%chequea si el juego ha llegado a su fin verificando si hay una linea horizontal entera de 1s.
+
+checkEOG(W, R):-
+    checkEndOfGame(W, R, 0).
+
+checkEndOfGame(_, false, 25):-!.
+
+checkEndOfGame([1|_], true, Count):-
+    4 is mod(Count, 5),
+    !.
+
+checkEndOfGame([1|Wall], Result, Count):-
+    NewCount is Count+1,
+    checkEndOfGame(Wall, Result, NewCount),
+    !.
+
+
+checkEndOfGame([0|Wall], Result, Count):-
+    NewCount is ((Count//5)+1)*5,
+    ToWalk is NewCount-Count-1,
+    walkNPositions(Wall, WallT, ToWalk),
+    checkEndOfGame(WallT, Result, NewCount).
+
+walkNPositions(Wall, Wall, 0):-!.
+
+walkNPositions([X|Wall], WallR, N):-
+    NewN is N-1,
+    walkNPositions(Wall, WallR, NewN).
+
+
+
+
+
+
 
 % rowPoints(W,I,TL,P)
 % Devuelve en P los puntos que se ganan en fila por jugar en la posición I de W con TL como tope de izquierdo de la fila
@@ -286,9 +330,9 @@ verifyColor(PL, I, [[], Count], PLR, _):-
 %Este es el metodo nuevo
 %
 
-fromPLToWall([], [], Wall, Wall, Cover, Cover, Points, Points):-!.
+fromPLToWall([], [], Wall, Wall, Cover, Cover, Floor,Points, Points):-!.
 
-fromPLToWall([ [Color, 0] | PL ], [[[], AllowedCount]|PLR], Wall, WallR, Cover, CoverR, Points, PointsR) :-
+fromPLToWall([ [Color, 0] | PL ], [[[], AllowedCount]|PLR], Wall, WallR, Cover, CoverR,Floor, Points, PointsR) :-
     getIndex(Color, Index),
     length([_|PL], NTemp),
     N is 5-NTemp,
@@ -296,13 +340,32 @@ fromPLToWall([ [Color, 0] | PL ], [[[], AllowedCount]|PLR], Wall, WallR, Cover, 
     changeIndex(Wall, NewIndex, 1, WallTemp),
     pushNCover(Cover, Color, N, CoverTemp),
     AllowedCount is N + 1,
-    wallPoints(WallTemp, NewIndex, P),
-    fromPLToWall(PL, PLR, WallTemp, WallR, CoverTemp, CoverR, Points, PointsTemp),
+    wallPoints(WallTemp, NewIndex, WP),
+    floorPoint(Floor, FP),
+    P is WP+FP,
+    fromPLToWall(PL, PLR, WallTemp, WallR, CoverTemp, CoverR, Floor,Points, PointsTemp),
     PointsR is PointsTemp + P,
     !.
 
-fromPLToWall([[Color, Count]| PL], [[Color, Count]|PLR], Wall, WallR, Cover, CoverR, Points, PointsR):-
-    fromPLToWall(PL, PLR, Wall, WallR, Cover, CoverR, Points, PointsR).
+fromPLToWall([[Color, Count]| PL], [[Color, Count]|PLR], Wall, WallR, Cover, CoverR,Floor, Points, PointsR):-
+    fromPLToWall(PL, PLR, Wall, WallR, Cover, CoverR, Floor,Points, PointsR).
+
+% =======
+% Players
+% =======
+
+newPlayers(Players):-
+    newPlayersN(Players, 0).
+
+newPlayersN(Players, 4):-!.
+newPlayersN([[W, PL, F]|Players], Count):-
+    newWall(W),
+    initializePL(PL),
+    floorVector(F),
+    NewCount is Count+1,
+    newPlayersN(Players, NewCount).
+
+
 
 % =====
 % COVER
@@ -320,24 +383,27 @@ pushNCover(Cover,Color, N, CoverResult):-pushNColorVector(Cover, Color, N, Cover
 % Bag: Estado de la bolsa luego de formar las factorias
 % Cover: Tapa del juego, es donde se ponen las fichas sobrantes de la ronda
 
-initializeGame(Players,Factories,Bag,Cover) :-
+initializeGame(Players,Factories,Bag,Cover, Table) :-
     length(Players,2),
     coverEmpty(Cover),
     initializeBag(BagTemp),
+    table(Table),
     makeNFactories(5,BagTemp,Factories,Bag),
     !.
 
-initializeGame(Players,Factories,Bag,Cover) :-
+initializeGame(Players,Factories,Bag,Cover, Table) :-
     length(Players,3),
     coverEmpty(Cover),
     initializeBag(BagTemp),
+    table(Table),
     makeNFactories(7,BagTemp,Factories,Bag),
     !.
     
-initializeGame(Players,Factories,Bag,Cover) :-
+initializeGame(Players,Factories,Bag,Cover, Table) :-
     length(Players,4),
     coverEmpty(Cover),
     initializeBag(BagTemp),
+    table(Table),
     makeNFactories(9,BagTemp,Factories,Bag),
     !.
 
@@ -355,22 +421,10 @@ nextRoundContinue(true,Factories,Bag,Cover,FactoriesResult,BagResult,Cover) :-
 
 nextRoundContinue(false,Factories,Bag,Cover,Factories,Bag,Cover) :- !.
 
-emptyFloor([],Cover,Cover) :- !.
-
-emptyFloor([false,_|R],Cover,Cover) :- !.
-
-emptyFloor([Color,_|R],Cover,CoverResult) :-
-    pushNColorVector(Cover,Color,1,CoverTemp),
-    emptyFloor(R,CoverTemp,CoverResult).
-
-emptyFloors([],Cover,Cover) :- !.
-
-emptyFloors([_,_,Floor,_|R],Cover,CoverResult) :-
-    emptyFloor(Floor,Cover,CoverTemp),
-    emptyFloors(R,CoverTemp,CoverResult).
-
-nextRound(Players,Factories,Bag,Cover,FactoriesResult,BagResult,CoverResult) :-
-    emptyFloors(Players,Cover,CoverTemp),
+nextRound(Factories,Bag,Cover,FactoriesResult,BagResult,CoverResult) :-
     refillFactories(Factories,Bag,TempFactories,[TempBagCV,TempBagMask]),
-    checkEmptyBag([TempBagCV,TempBagMask], CoverTemp,BagR, CoverR,Result),
+    checkEmptyBag([TempBagCV,TempBagMask], Cover,BagR, CoverR,Result),
     nextRoundContinue(Result,TempFactories,BagR,CoverR,FactoriesResult,BagResult,CoverResult).
+
+
+    
