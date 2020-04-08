@@ -115,7 +115,7 @@ newWallN(WallR, 26):-!.
 
 newWallN([0|WallR], N):-
     NewN is N+1,
-    newWall(WallR, NewN).
+    newWallN(WallR, NewN).
 
 
 %chequea si el juego ha llegado a su fin verificando si hay una linea horizontal entera de 1s.
@@ -358,7 +358,7 @@ newPlayers(Players):-
     newPlayersN(Players, 0).
 
 newPlayersN(Players, 4):-!.
-newPlayersN([[W, PL, F]|Players], Count):-
+newPlayersN([[W, PL, F, 0]|Players], Count):-
     newWall(W),
     initializePL(PL),
     floorVector(F),

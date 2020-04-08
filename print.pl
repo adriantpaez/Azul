@@ -1,4 +1,4 @@
-printNewLIne() :-
+printNewLine() :-
     write('\n').
 
 printSpace(0) :- !.
@@ -55,7 +55,7 @@ printFactories([F|FR]) :-
     N is 9 - L,
     ansi_format([], 'Factory ~w:', [N]),
     printFactory(F),
-    printNewLIne(),
+    printNewLine(),
     printFactories(FR).
 
 
