@@ -307,24 +307,29 @@ initializePL([[[],1], [[],2], [[],3], [[],4], [[],5]]).
 
 %pushColorPL(PL, [Color, Count], Pos, Wall, Floor, FloorResult, Cover, CoverResult, PLResult)
 
-pushColorPL(PL, [Color, PushCount], Pos, Wall, F, FR, C, CR, PLR) :- 
+possibleToPushColorPL(PL, [Color, PushCount], Pos, Wall):-
     getIndex(Color, IndexTemp),
     Index is (Pos*6) + IndexTemp,
     getByIndex(Wall, Index, 0),
     !,
-    verifyColor(PL, Pos, [_, Count], PLTemp, Color),
-    !,
+    verifyColor(PL, Pos, Color).
+
+verifyColor(PL, Pos, Color):-
+    getByIndex(PL, Pos, [Color, _]),
+    !.
+
+
+verifyColor(PL, Pos, Color):-
+    getByIndex(PL, Pos, [[], _]).
+
+
+pushColorPL(PL, [Color, PushCount], Pos, Wall, F, FR, C, CR, PLR) :- 
+    pushByIndex(PLTemp, Pos, [_, Count], PL).
     TempCount is Count-PushCount,
     max(0, TempCount, NewCount),
     pushByIndex(PLTemp, Pos, [Color, NewCount], PLR),
     FloorTiles is 0-TempCount,
     pushFloor(F, [Color, FloorTiles], FR, C, CR).
-
-verifyColor(PL, I, [Color, Count], PLR, Color):-
-    pushByIndex(PLR, I, [Color, Count], PL).
-
-verifyColor(PL, I, [[], Count], PLR, _):-
-    pushByIndex(PLR, I, [[], Count], PL).
 
 %
 %Este es el metodo nuevo
@@ -382,25 +387,8 @@ pushNCover(Cover,Color, N, CoverResult):-pushNColorVector(Cover, Color, N, Cover
 %            de la cantidad de jugadores
 % Bag: Estado de la bolsa luego de formar las factorias
 % Cover: Tapa del juego, es donde se ponen las fichas sobrantes de la ronda
-
-initializeGame(Players,Factories,Bag,Cover, Table) :-
-    length(Players,2),
-    coverEmpty(Cover),
-    initializeBag(BagTemp),
-    table(Table),
-    makeNFactories(5,BagTemp,Factories,Bag),
-    !.
-
-initializeGame(Players,Factories,Bag,Cover, Table) :-
-    length(Players,3),
-    coverEmpty(Cover),
-    initializeBag(BagTemp),
-    table(Table),
-    makeNFactories(7,BagTemp,Factories,Bag),
-    !.
     
-initializeGame(Players,Factories,Bag,Cover, Table) :-
-    length(Players,4),
+initializeGame(Factories,Bag,Cover, Table) :-
     coverEmpty(Cover),
     initializeBag(BagTemp),
     table(Table),

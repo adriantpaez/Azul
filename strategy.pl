@@ -30,21 +30,24 @@ selectRandom(_, Table, TableR, [ColorR, CountR]):-
     tablePopColor(Table, ColorR,TableR, _).
     
 
-selectFirstFreePL(PL,[Color, Count], Wall, F, FR, C, CR, PLR):-
-    pushColorPL(PL, [Color, Count], 0, Wall, F, FR, C, CR, PLR),
-    !,
-    pushColorPL(PL, [Color, Count], 1, Wall, F, FR, C, CR, PLR),
-    !,
-    pushColorPL(PL, [Color, Count], 2, Wall, F, FR, C, CR, PLR),
-    !,
-    pushColorPL(PL, [Color, Count], 3, Wall, F, FR, C, CR, PLR),
-    !,
-    pushColorPL(PL, [Color, Count], 4, Wall, F, FR, C, CR, PLR),
+selectFirstFreePL(PL,[Color, Count], 5, _, F, FR, _, _, PL):-
+    pushFloor(F, [Color, Count], FR),
     !.
+
+
+selectFirstFreePL(PL,[Color, Count], Index, Wall, F, FR, C, CR, PLR):-
+    possibleToPushColorPL(PL, [Color, Count], Index, Wall),
+    pushColorPL(PL, [Color, Count], Index, Wall, F, FR, C, CR, PLR),
+    !.
+
+selectFirstFreePL(PL,[Color, Count], Index, Wall, F, FR, C, CR, PLR):-
+    NewIndex is Index+1,
+    selectFirstFreePL(PL, [Color, Count], NewIndex, Wall, F, FR, C, CR, PLR).
+
 
 randomStrategy(PL, W, Factories, Table, TableR, Cover, CoverR, Floor, FloorR, PLR):-
     selectRandom(Factories, Table, TableR, [ColorR, CountR]),
-    selectFirstFreePL(PL, [ColorR, CountR], W, F,FR, Cover, CoverR, PLR).
+    selectFirstFreePL(PL, [ColorR, CountR], 0,W, F,FR, Cover, CoverR, PLR).
     
 
 
