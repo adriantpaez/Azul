@@ -355,7 +355,22 @@ nextRoundContinue(true,Factories,Bag,Cover,FactoriesResult,BagResult,Cover) :-
 
 nextRoundContinue(false,Factories,Bag,Cover,Factories,Bag,Cover) :- !.
 
-nextRound(Factories,Bag,Cover,FactoriesResult,BagResult,CoverResult) :-
+emptyFloor([],Cover,Cover) :- !.
+
+emptyFloor([false,_|R],Cover,Cover) :- !.
+
+emptyFloor([Color,_|R],Cover,CoverResult) :-
+    pushNColorVector(Cover,Color,1,CoverTemp),
+    emptyFloor(R,CoverTemp,CoverResult).
+
+emptyFloors([],Cover,Cover) :- !.
+
+emptyFloors([_,_,Floor,_|R],Cover,CoverResult) :-
+    emptyFloor(Floor,Cover,CoverTemp),
+    emptyFloors(R,CoverTemp,CoverResult).
+
+nextRound(Players,Factories,Bag,Cover,FactoriesResult,BagResult,CoverResult) :-
+    emptyFloors(Players,Cover,CoverTemp),
     refillFactories(Factories,Bag,TempFactories,[TempBagCV,TempBagMask]),
-    checkEmptyBag([TempBagCV,TempBagMask], Cover,BagR, CoverR,Result),
+    checkEmptyBag([TempBagCV,TempBagMask], CoverTemp,BagR, CoverR,Result),
     nextRoundContinue(Result,TempFactories,BagR,CoverR,FactoriesResult,BagResult,CoverResult).
