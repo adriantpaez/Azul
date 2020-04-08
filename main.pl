@@ -30,9 +30,9 @@ play(Players, Factories, Bag, Cover, Table, PlayersR, false):-
     nextround(FactoriesT,BagT,CoverT,FactoriesR,BagR,CoverR),
     play(PlayersT, FactoriesR, BagR, CoverR, TableR, PlayersR, EOG).
 
-printplayerResult([PL, W, FL, _], Factories):-
+printplayerResult([W, PL, FL, _], Factories):-
     printFactories(Factories),
-    printBoard(PL, W, FL),
+    printBoard(W, PL, FL),
     printNewLine().
 
 

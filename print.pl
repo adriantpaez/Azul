@@ -66,12 +66,12 @@ printPatternLine(Row,[Color,Count]) :-
     NewCount is Row + 1 - Count,
     printTileN(Color,NewCount).
 
-printWallTile(Row,Index,false) :-
+printWallTile(Row,Index,0) :-
     ColorIndex is (Index - Row) mod 5,
     colorByIndex(ColorIndex,Color),
     printEmptyTileColor(Color).
 
-printWallTile(Row,Index,true) :-
+printWallTile(Row,Index,1) :-
     ColorIndex is (Index - Row) mod 5,
     colorByIndex(ColorIndex,Color),
     printTile(Color).
@@ -86,7 +86,7 @@ printPatternLinesAndWall(Row,[PL|PLR],[A0,A1,A2,A3,A4|R]) :-
     printWallTile(Row,2,A2),
     printWallTile(Row,3,A3),
     printWallTile(Row,4,A4),
-    printNewLIne(),
+    printNewLine(),
     NewRow is Row + 1,
     printPatternLinesAndWall(NewRow,PLR,R),
     !.
@@ -102,6 +102,6 @@ printFloor([[Color,_]|R]) :-
     printTile(Color),
     printFloor(R).
 
-printBoard(PatternLines, Wall, Floor) :-
+printBoard(Wall,PatternLines, Floor) :-
     printPatternLinesAndWall(0,PatternLines,Wall),
     printFloor(Floor).

@@ -98,7 +98,7 @@ pushFloor([], [Color, N], [], Cover, CoverResult) :-
 
 pushFloor([[false, Points]|Rest], [Color, N], [[Color, Points]|ResultRest], Cover, CoverResult) :-   
     NewN is N-1, 
-    pushFloor(Rest, [Color, NewN], ResultRest, Cover, CoverResult)
+    pushFloor(Rest, [Color, NewN], ResultRest, Cover, CoverResult),
     !.
 
 pushFloor([[_, Points]|Rest], ColorTuple, [[_, Points]|ResultRest], Cover, CoverResult) :- 
