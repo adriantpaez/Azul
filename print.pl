@@ -48,15 +48,24 @@ printFactory([[Color,Count]|R]) :-
     NewCount is Count - 1,
     printFactory([[Color,NewCount]|R]).
     
-printFactories([]) :- !.
+printFactories([],_,_) :- !.
 
-printFactories([F|FR]) :-
+printFactories([F|FR],Index,Mask) :-
     length(FR,L),
     N is 9 - L,
     ansi_format([], 'Factory ~w:', [N]),
+    member(Index,Mask),
     printFactory(F),
+    NewIndex is Index + 1,
     printNewLine(),
-    printFactories(FR).
+    printFactories(FR, NewIndex, Mask),
+    !.
+
+printFactories([_|FR],Index,Mask) :-
+    NewIndex is Index + 1,
+    printNewLine(),
+    printFactories(FR, NewIndex, Mask),
+    !.
 
 
 printPatternLine(Row,[Color,Count]) :-
