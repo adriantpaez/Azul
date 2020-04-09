@@ -3,7 +3,9 @@
 
 playerround([W, PL, _, Points], Factories, Cover, Table, TableR, CoverR, [WR, PLR, FT, PointsR],Mask, MaskR, EOG):-
     floorVector(F),
-    randomStrategy(PL, W, Factories, Table, TableR, Cover, CoverT,F, FT, PLT, Mask, MaskR),
+    randomStrategy(PL, W, Factories, Table, TableR, Cover, CoverT,F, FT, PLT, Mask, MaskR, EOG),
+    not(EOG),
+    !,
     fromPLToWall(PLT, PLR, W, WR, CoverT, CoverR, FT, Points, PointsR),
     checkEOG(WR, EOG).
 
@@ -25,8 +27,8 @@ round([P1, P2, P3, P4], Factories, Cover, Table, TableR, CoverR, [PR1, PR2, PR3,
 
 play(_, _, _, _, _, _,true):-!.
 
-play(Players, Factories, Bag, Cover, Table, Mask, false):-
-    round(Players, Factories, Cover, Table, TableR, CoverT, PlayersT, Mask, MaskT, EOG),
+play(Players, Factories, Bag, Cover, Table, Mask, false) :-
+    round(Players, Factories, Cover, Table, TableR, CoverT, PlayersT, Mask, MaskT, EOG),   
     removeEmptyFactories(Factories, MaskT,FactoriesT),
     nextRound(FactoriesT,Bag,CoverT,FactoriesR,BagR,CoverR),
     calculateMaskFactories(FactoriesR, MaskR),

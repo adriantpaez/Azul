@@ -29,12 +29,6 @@ pushByIndex([X|L], I, E, [X|R]):-
     NewI is I-1,
     pushByIndex(L, NewI, E, R).
 
-
-probs(Random, Value, 1):-
-    Random < Value.
-
-probs(_, _, 0):-!.
-
 % removeValue(L,X,R)
 % Devuelve en R el resultado de eliminar la primera ocurrencia de X en L
 removeValue([X|R],X,R) :- !.
