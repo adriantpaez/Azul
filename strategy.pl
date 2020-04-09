@@ -7,6 +7,8 @@
 
 selectRandomFactory(F, SF, Mask, MaskR):-
     length(Mask, L),
+    L>0,
+    !,
     random(0, L, IT),
     getByIndex(Mask, IT, I),
     getByIndex(F, I, SF),
@@ -51,10 +53,9 @@ selectRandom(_, Table, TableR, [ColorR, CountR], Mask, Mask):-
     tablePopColor(Table, ColorR,TableR, _).
     
 
-selectFirstFreePL(PL,[Color, Count], 5, _, F, FR, _, _, PL):-
-    pushFloor(F, [Color, Count], FR),
+selectFirstFreePL(PL,[Color, Count], 5, _, F, FR, C, CR, PL):-
+    pushFloor(F, [Color, Count], FR, C, CR),
     !.
-
 
 selectFirstFreePL(PL,[Color, Count], Index, Wall, F, FR, C, CR, PLR):-
     possibleToPushColorPL(PL, [Color, Count], Index, Wall),
@@ -73,12 +74,13 @@ randomStrategy(PL, W, Factories, Table, TableR, Cover, CoverR, Floor, FloorR, PL
 calculateMaskFactories([], _, []):-!.
 
 calculateMaskFactories([F|Rest], Index, FM):-
-    bagRecalculateMask([F,_], [F, []]),
+    bagRecalculateMask([F,_], [_, []]),
+    !,
     NewIndex is Index+1,
     calculateMaskFactories(Rest, NewIndex, FM),
     !.
 
-calculateMaskFactories([_|Rest], Index, [NewIndex|FM]):-
+calculateMaskFactories([_|Rest], Index, [Index|FM]):-
     NewIndex is Index+1,
     calculateMaskFactories(Rest, NewIndex,FM).
 

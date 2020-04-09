@@ -10,10 +10,12 @@ inside(L,I) :-
 % getByIndex(L,I,E)
 % Devuelve en E el elemento que está en la posición I de L
 %
+
 getByIndex([X|_],0,X) :- !.
 
 getByIndex([X|R],I,E) :-
     inside([X|R],I),
+    !,
     NewIndex is I-1,
     getByIndex(R,NewIndex,E).
 

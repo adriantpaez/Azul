@@ -26,8 +26,8 @@ round([P1, P2, P3, P4], Factories, Cover, Table, TableR, CoverR, [PR1, PR2, PR3,
 play(_, _, _, _, _, _,true):-!.
 
 play(Players, Factories, Bag, Cover, Table, Mask, false):-
-    round(Players, Factories, Cover, Table, TableR, CoverT, PlayersT, Mask, MaskR, EOG),
-    removeEmptyFactories(Factories, MaskR,FactoriesT),
+    round(Players, Factories, Cover, Table, TableR, CoverT, PlayersT, Mask, MaskT, EOG),
+    removeEmptyFactories(Factories, MaskT,FactoriesT),
     nextRound(FactoriesT,Bag,CoverT,FactoriesR,BagR,CoverR),
     calculateMaskFactories(FactoriesR, MaskR),
     play(PlayersT, FactoriesR, BagR, CoverR, TableR, MaskR, EOG).
