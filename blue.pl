@@ -91,7 +91,8 @@ floorPoint([[_,Value]|R],Points) :-
 pushFloor(R, [_,0], R, Cover, Cover):-!.
 
 pushFloor(R, [_, Count],R, Cover, Cover):- 
-    max(0, Count, 0).
+    max(0, Count, 0),
+    !.
 
 pushFloor([], [Color, N], [], Cover, CoverResult) :- 
     pushNCover(Cover, Color, N, CoverResult).
@@ -324,7 +325,7 @@ initializePL([[[],1], [[],2], [[],3], [[],4], [[],5]]).
 
 possibleToPushColorPL(PL, [Color, _], Pos, Wall):-
     getIndex(Color, IndexTemp),
-    Index is (Pos*6) + IndexTemp,
+    Index is (Pos*5) + IndexTemp,
     getByIndex(Wall, Index, 0),
     !,
     verifyColor(PL, Pos, Color).

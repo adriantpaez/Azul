@@ -39,23 +39,23 @@ printEmptyTileColor(rojo) :- ansi_format([bold,fg(red)], '◻', []).
 printEmptyTileColor(negro) :- ansi_format([bold,fg(black)], '◻', []).
 printEmptyTileColor(blanco) :- ansi_format([bold,fg(white)], '◻', []).
 
-printFactory([]) :- !.
-printFactory([[_,0]|R]) :- 
-    printFactory(R), 
+printColorVector([]) :- !.
+printColorVector([[_,0]|R]) :- 
+    printColorVector(R), 
     !.
-printFactory([[Color,Count]|R]) :-
+printColorVector([[Color,Count]|R]) :-
     printTile(Color),
     NewCount is Count - 1,
-    printFactory([[Color,NewCount]|R]).
+    printColorVector([[Color,NewCount]|R]).
     
 printFactories([],_,_) :- !.
 
 printFactories([F|FR],Index,Mask) :-
     length(FR,L),
     N is 9 - L,
-    ansi_format([], 'Factory ~w:', [N]),
+    ansi_format([], 'F ~w:', [N]),
     member(Index,Mask),
-    printFactory(F),
+    printColorVector(F),
     NewIndex is Index + 1,
     printNewLine(),
     printFactories(FR, NewIndex, Mask),
@@ -122,3 +122,14 @@ printplayerResult([W, PL, FL, _], Factories, FactoryMask):-
     printFactories(Factories, FactoryMask),
     printBoard(W, PL, FL),
     printNewLine().
+
+
+printBag([CV,_]):-
+    printColorVector(CV).
+
+printCover(Cover) :-
+    printColorVector(Cover).
+
+printTable(Table) :-
+    printColorVector(Table).
+

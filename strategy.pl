@@ -44,6 +44,7 @@ selectRandomFactoryOrTable(Result):-
 selectRandom(Factories, Table, TableR, [ColorR, CountR], Mask, MaskR):-
     selectRandomFactoryOrTable(1),
     selectRandomFactory(Factories, SF,Mask, MaskR),
+    !,
     selectRandomColor(SF, [ColorR, CountR]),
     factoryGetColor(SF, ColorR, Table, TableR),
     !.
