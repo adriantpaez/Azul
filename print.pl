@@ -22,8 +22,8 @@ printTileN(Color,Count) :-
     printTileN(Color,NewCount).
 
 colorByIndex(0,azul).
-colorByIndex(1,rojo).
-colorByIndex(2,amarillo).
+colorByIndex(1,amarillo).
+colorByIndex(2,rojo).
 colorByIndex(3,negro).
 colorByIndex(4,blanco).
 

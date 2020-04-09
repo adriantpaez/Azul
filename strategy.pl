@@ -37,7 +37,7 @@ maskColorFactory([_|F],Index, [Index|M]):-
     maskColorFactory(F, NewIndex, M).
 
 
-selectFromFactory(Factories, SF, Mask, MaskR, ColorR, CountR, Table, TableR):-
+selectFromFactory(Factories, Mask, MaskR, ColorR, CountR, Table, TableR):-
     selectRandomFactory(Factories, SF,Mask, MaskR),
     !,
     selectRandomColor(SF, [ColorR, CountR]),
@@ -50,7 +50,7 @@ selectFromTable(Table, ColorR, CountR, TableR) :-
 
 
 selectRandom(Factories, Table, TableR, [ColorR, CountR], Mask, MaskR, false):-
-    selectFromFactory(Factories, SF, Mask, MaskR, ColorR, CountR, Table, TableR),
+    selectFromFactory(Factories, Mask, MaskR, ColorR, CountR, Table, TableR),
     !.
 
 selectRandom(_, Table, TableR, [ColorR, CountR], Mask, Mask, false):-

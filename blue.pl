@@ -325,7 +325,7 @@ initializePL([[[],1], [[],2], [[],3], [[],4], [[],5]]).
 
 possibleToPushColorPL(PL, [Color, _], Pos, Wall):-
     getIndex(Color, IndexTemp),
-    Index is (Pos*5) + IndexTemp,
+    Index is ((IndexTemp + Pos) mod 5) + (Pos * 5),
     getByIndex(Wall, Index, 0),
     !,
     verifyColor(PL, Pos, Color).
@@ -359,7 +359,7 @@ fromPLToWall([ [Color, 0] | PL ], [[[], AllowedCount]|PLR], Wall, WallR, Cover, 
     getIndex(Color, Index),
     length([_|PL], NTemp),
     N is 5-NTemp,
-    NewIndex is (N*6)+Index,
+    NewIndex is ((Index + N) mod 5) + (N * 5),
     changeIndex(Wall, NewIndex, 1, WallTemp),
     pushNCover(Cover, Color, N, CoverTemp),
     AllowedCount is N + 1,
