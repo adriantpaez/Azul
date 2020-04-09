@@ -41,7 +41,7 @@ selectFirstFreePL(PL,[Color, Count], 5, _, F, FR, _, _, PL):-
 
 selectFirstFreePL(PL,[Color, Count], Index, Wall, F, FR, C, CR, PLR):-
     possibleToPushColorPL(PL, [Color, Count], Index, Wall),
-    pushColorPL(PL, [Color, Count], Index, Wall, F, FR, C, CR, PLR),
+    pushColorPL(PL, [Color, Count], Index, F, FR, C, CR, PLR),
     !.
 
 selectFirstFreePL(PL,[Color, Count], Index, Wall, F, FR, C, CR, PLR):-
@@ -51,7 +51,7 @@ selectFirstFreePL(PL,[Color, Count], Index, Wall, F, FR, C, CR, PLR):-
 
 randomStrategy(PL, W, Factories, Table, TableR, Cover, CoverR, Floor, FloorR, PLR, Mask, MaskR):-
     selectRandom(Factories, Table, TableR, [ColorR, CountR], Mask, MaskR),
-    selectFirstFreePL(PL, [ColorR, CountR], 0,W, F,FR, Cover, CoverR, PLR).
+    selectFirstFreePL(PL, [ColorR, CountR], 0,W, Floor,FloorR, Cover, CoverR, PLR).
 
 calculateMaskFactories([], _, []):-!.
 
@@ -61,18 +61,10 @@ calculateMaskFactories([F|Rest],Index, FM):-
     calculateMaskFactories(Rest, NewIndex, FM),
     !.
 
-calculateMaskFactories([F|Rest], Index, [NewIndex|FM]):-
+calculateMaskFactories([_|Rest], Index, [NewIndex|FM]):-
     NewIndex is Index+1,
     calculateMaskFactories(Rest, newIndex,FM).
 
-
-
-
-    
-
-
-
-    
-
-
+calculateMaskFactories(Factories,Mask) :-
+    calculateMaskFactories(Factories, 0, Mask).
 

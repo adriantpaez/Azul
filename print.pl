@@ -119,6 +119,6 @@ printBoard(Wall,PatternLines, Floor) :-
     printFloor(Floor).
 
 printplayerResult([W, PL, FL, _], Factories, FactoryMask):-
-    printFactories(Factories, Mask),
+    printFactories(Factories, FactoryMask),
     printBoard(W, PL, FL),
     printNewLine().

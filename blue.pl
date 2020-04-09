@@ -111,7 +111,7 @@ pushFloor([[_, Points]|Rest], ColorTuple, [[_, Points]|ResultRest], Cover, Cover
 newWall(Wall):-
     newWallN(Wall, 0).
 
-newWallN(WallR, 26):-!.
+newWallN(_, 26):-!.
 
 newWallN([0|WallR], N):-
     NewN is N+1,
@@ -143,7 +143,7 @@ checkEndOfGame([0|Wall], Result, Count):-
 
 walkNPositions(Wall, Wall, 0):-!.
 
-walkNPositions([X|Wall], WallR, N):-
+walkNPositions([_|Wall], WallR, N):-
     NewN is N-1,
     walkNPositions(Wall, WallR, NewN).
 
@@ -284,10 +284,13 @@ removeEmptyFactories([X|F], Mask, N, [X|FR]):-
     removeEmptyFactories(F, Mask, NewN, FR),
     !.
 
-removeEmptyFactories([X|F], Mask,N, [K|FR]):-
+removeEmptyFactories([_|F], Mask,N, [K|FR]):-
     factoryEmpty(K),
     NewN is N+1,
     removeEmptyFactories(F, Mask, NewN, FR).
+
+removeEmptyFactories(Factories, Mask, FactoriesResult) :-
+    removeEmptyFactories(Factories, Mask, 0, FactoriesResult).
 
 
 % Devuelve la cantidad de azulejos del color Color hay en Factory
@@ -318,25 +321,17 @@ factoryGetColor([[OtherColor,Count]|FactoryR], Color, Table, TableResult) :-
 
 initializePL([[[],1], [[],2], [[],3], [[],4], [[],5]]).
 
-%pushColorPL(PL, [Color, Count], Pos, Wall, Floor, FloorResult, Cover, CoverResult, PLResult)
 
-possibleToPushColorPL(PL, [Color, PushCount], Pos, Wall):-
+possibleToPushColorPL(PL, [Color, _], Pos, Wall):-
     getIndex(Color, IndexTemp),
     Index is (Pos*6) + IndexTemp,
     getByIndex(Wall, Index, 0),
     !,
     verifyColor(PL, Pos, Color).
 
-verifyColor(PL, Pos, Color):-
-    getByIndex(PL, Pos, [Color, _]),
-    !.
+%pushColorPL(PL, [Color, Count], Pos, Wall, Floor, FloorResult, Cover, CoverResult, PLResult)
 
-
-verifyColor(PL, Pos, Color):-
-    getByIndex(PL, Pos, [[], _]).
-
-
-pushColorPL(PL, [Color, PushCount], Pos, Wall, F, FR, C, CR, PLR) :- 
+pushColorPL(PL, [Color, PushCount], Pos, F, FR, C, CR, PLR) :- 
     pushByIndex(PLTemp, Pos, [_, Count], PL),
     TempCount is Count-PushCount,
     max(0, TempCount, NewCount),
@@ -344,11 +339,20 @@ pushColorPL(PL, [Color, PushCount], Pos, Wall, F, FR, C, CR, PLR) :-
     FloorTiles is 0-TempCount,
     pushFloor(F, [Color, FloorTiles], FR, C, CR).
 
+verifyColor(PL, Pos, Color):-
+    getByIndex(PL, Pos, [Color, _]),
+    !.
+
+
+verifyColor(PL, Pos, _):-
+    getByIndex(PL, Pos, [[], _]).
+
+
 %
 %Este es el metodo nuevo
 %
 
-fromPLToWall([], [], Wall, Wall, Cover, Cover, Floor,Points, Points):-!.
+fromPLToWall([], [], Wall, Wall, Cover, Cover, _,Points, Points):-!.
 
 fromPLToWall([ [Color, 0] | PL ], [[[], AllowedCount]|PLR], Wall, WallR, Cover, CoverR,Floor, Points, PointsR) :-
     getIndex(Color, Index),
@@ -375,7 +379,7 @@ fromPLToWall([[Color, Count]| PL], [[Color, Count]|PLR], Wall, WallR, Cover, Cov
 newPlayers(Players):-
     newPlayersN(Players, 0).
 
-newPlayersN(Players, 4):-!.
+newPlayersN(_, 4):-!.
 newPlayersN([[W, PL, F, 0]|Players], Count):-
     newWall(W),
     initializePL(PL),
