@@ -33,8 +33,8 @@ play(Players, Factories, Bag, Cover, Table, Mask, false):-
     calculateMaskFactories(FactoriesR, 0,MaskR),
     play(PlayersT, FactoriesR, BagR, CoverR, TableR, MaskR, EOG).
 
-printplayerResult([W, PL, FL, _], Factories):-
-    printFactories(Factories),
+printplayerResult([W, PL, FL, _], Factories, FactoryMask):-
+    printFactories(Factories, Mask),
     printBoard(W, PL, FL),
     printNewLine().
 

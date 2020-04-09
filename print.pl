@@ -67,6 +67,9 @@ printFactories([_|FR],Index,Mask) :-
     printFactories(FR, NewIndex, Mask),
     !.
 
+printFactories(Factories,Mask) :-
+    printFactories(Factories, 0, Mask).
+
 
 printPatternLine(Row,[Color,Count]) :-
     Spaces is 5 - Row - 1,
