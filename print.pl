@@ -117,3 +117,8 @@ printFloor([[Color,_]|R]) :-
 printBoard(Wall,PatternLines, Floor) :-
     printPatternLinesAndWall(0,PatternLines,Wall),
     printFloor(Floor).
+
+printplayerResult([W, PL, FL, _], Factories, FactoryMask):-
+    printFactories(Factories, Mask),
+    printBoard(W, PL, FL),
+    printNewLine().

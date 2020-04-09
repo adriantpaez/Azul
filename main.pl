@@ -10,19 +10,19 @@ playerround([W, PL, _, Points], Factories, Bag, Cover, Table, TableR, CoverR, Ba
 
 round([P1, P2, P3, P4], Factories, Bag, Cover, Table, TableR, CoverR, BagR, FactoriesR, [PR1, PR2, PR3, PR4], Mask,MaskR,EOG):-
     playerround(P1, Factories, Bag, Cover, Table, TableT1, CoverT1, BagT1, PR1, Mask, MaskT1,EOG),
-    printplayerResult(P1, Factories),
+    printplayerResult(P1, Factories,MaskT1),
     not(EOG),
     !,
     playerround(P2, Factories, BagT1, CoverT1, TableT1, TableT2, CoverT2, BagT2, PR2,MaskT1, MaskT2, EOG),
-    printplayerResult(P2, Factories),
+    printplayerResult(P2, Factories,MaskT2),
     not(EOG),
     !,
     playerround(P3, Factories, BagT2, CoverT2, TableT2, TableT3, CoverT3, BagT3, PR3, MaskT2, MaskT3, EOG),
-    printplayerResult(P3, Factories),
+    printplayerResult(P3, Factories,MaskT3),
     not(EOG),
     !,
     playerround(P4, Factories, BagT3, CoverT3, TableT3, TableR, CoverR, BagR, PR4, MaskT3, MaskR, EOG),
-    printplayerResult(P4, Factories).
+    printplayerResult(P4, Factories,MaskR).
 
 play(Players, Factories, Bag, Cover, Table, _,true):-!.
 
@@ -32,14 +32,6 @@ play(Players, Factories, Bag, Cover, Table, Mask, false):-
     nextRound(FactoriesT1,BagT,CoverT,FactoriesR,BagR,CoverR),
     calculateMaskFactories(FactoriesR, 0,MaskR),
     play(PlayersT, FactoriesR, BagR, CoverR, TableR, MaskR, EOG).
-
-printplayerResult([W, PL, FL, _], Factories, FactoryMask):-
-    printFactories(Factories, Mask),
-    printBoard(W, PL, FL),
-    printNewLine().
-
-
-
 
 game():-    newPlayers(Players),
             initializeGame(Factories, Bag, Cover, Table),
