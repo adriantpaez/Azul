@@ -13,9 +13,26 @@ selectRandomFactory(F, SF, Mask, MaskR):-
     removeValue(Mask, I, MaskR).
 
 selectRandomColor(SF, [ColorR, CountR]):-
-    length(SF, L),
-    random(0, L, I),
+    maskColorFactory(SF, Mask),
+    length(Mask, L),
+    random(0, L, IT),
+    getByIndex(Mask, IT, I),
     getByIndex(SF, I, [ColorR, CountR]).
+
+maskColorFactory(F, M):-
+    maskColorFactory(F, 0, M).
+
+maskColorFactory([], _,[]):-!.
+
+maskColorFactory([[_, 0]|F], Index, M):-
+    NewIndex is Index+1,
+    maskColorFactory(F, NewIndex, M),
+    !.
+
+maskColorFactory([_|F],Index, [Index|M]):-
+    NewIndex is Index+1,
+    maskColorFactory(F, NewIndex, M).
+
     
 selectRandomFactoryOrTable(Result):-
     random(0, 1.0, R),
@@ -55,7 +72,7 @@ randomStrategy(PL, W, Factories, Table, TableR, Cover, CoverR, Floor, FloorR, PL
 
 calculateMaskFactories([], _, []):-!.
 
-calculateMaskFactories([F|Rest],Index, FM):-
+calculateMaskFactories([F|Rest], Index, FM):-
     bagRecalculateMask([F,_], [F, []]),
     NewIndex is Index+1,
     calculateMaskFactories(Rest, NewIndex, FM),
@@ -63,8 +80,8 @@ calculateMaskFactories([F|Rest],Index, FM):-
 
 calculateMaskFactories([_|Rest], Index, [NewIndex|FM]):-
     NewIndex is Index+1,
-    calculateMaskFactories(Rest, newIndex,FM).
+    calculateMaskFactories(Rest, NewIndex,FM).
 
-calculateMaskFactories(Factories,Mask) :-
+calculateMaskFactories(Factories, Mask) :-
     calculateMaskFactories(Factories, 0, Mask).
 
