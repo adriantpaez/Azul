@@ -176,7 +176,7 @@ wallPoints(W,I,0) :-
     getByIndex(W,I,0), !.
 
 wallPoints(W,I,P) :-
-    TL is (I/5) * 5, 
+    TL is (I//5) * 5, 
     rowPoints(W,I,TL,PR), 
     TU is I mod 5, 
     columnPoints(W,I,TU,PC), 
@@ -413,9 +413,10 @@ initializeGame(Factories,Bag,Cover, Table) :-
     makeNFactories(9,BagTemp,Factories,Bag),
     !.
 
-checkEmptyBag([BagCV,BagMask],Cover,BagResult,[],true) :-
+checkEmptyBag([BagCV,BagMask],Cover,BagResult,NewCover,true) :-
     length(BagMask,0),
     bagMergeWithColorVector(Cover,[BagCV,BagMask],BagResult),
+    coverEmpty(NewCover),
     !.
 
 checkEmptyBag([BagCV,BagMask],Cover,[BagCV,BagMask],Cover,false) :-
