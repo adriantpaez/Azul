@@ -56,3 +56,10 @@ countCountinous(W,I,J,T,P) :-
 
 max(A, B, A):- A > B.
 max(_, B, B).
+
+
+concatLists([], L, L).
+concatLists(L, [], L).
+
+concatLists([X|L1], L2, [X|R]):-
+    concatLists(L1, L2, R).
