@@ -134,10 +134,14 @@ printBag([CV,_]):-
     printNewLine().
 
 printCover(Cover) :-
-    printColorVector(Cover).
+    write("Cover: "),
+    printColorVector(Cover),
+    printNewLine().
 
 printTable(Table) :-
-    printColorVector(Table).
+    write("Table: "),
+    printColorVector(Table),
+    printNewLine().
 
 printInitial(true) :-
     printTile(initial),
