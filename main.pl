@@ -77,9 +77,8 @@ penalizeInitial([W, PL, F, Points], true, [W, PL, FR, PointsR]):-
     PointsR is Points+PointsF.
     
 play(Players, Factories, Bag, Cover, Table, Mask):-
-    write("Bag: "),
     printBag(Bag),
-    printNewLine(),
+    printFactories(Factories,[0,1,2,3,4,5,6,7,8]),
     round(Players, Factories, Cover, Table, TableR, CoverT, PlayersT, Mask, MaskT, Initial),
     removeEmptyFactories(Factories, MaskT,FactoriesT),
     nextRound(FactoriesT,Bag,CoverT,FactoriesR,BagR,CoverR),
@@ -99,9 +98,7 @@ changeOrder([P1,P2,P3,P4], 3, [P4, P1, P2, P3]).
 
 game():-    newPlayers(Players),
             initializeGame(Factories, Bag, Cover, Table),
-            write("Bag: "),
             printBag(Bag),
-            printNewLine(),
             write("Cover: "),
             printCover(Cover),
             printNewLine(),

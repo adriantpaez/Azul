@@ -59,18 +59,20 @@ printFactories([F|FR],Index,Mask) :-
     member(Index,Mask),
     printColorVector(F),
     NewIndex is Index + 1,
-    printNewLine(),
+    printSpace(3),
     printFactories(FR, NewIndex, Mask),
     !.
 
 printFactories([_|FR],Index,Mask) :-
     NewIndex is Index + 1,
-    printNewLine(),
+    printEmptyTile(4),
+    printSpace(3),
     printFactories(FR, NewIndex, Mask),
     !.
 
 printFactories(Factories,Mask) :-
-    printFactories(Factories, 0, Mask).
+    printFactories(Factories, 0, Mask),
+    printNewLine().
 
 
 printPatternLine(Row,[Color,Count]) :-
@@ -127,7 +129,9 @@ printplayerResult([W, PL, FL, _], Factories, FactoryMask):-
 
 
 printBag([CV,_]):-
-    printColorVector(CV).
+    write("Bag: "),
+    printColorVector(CV),
+    printNewLine().
 
 printCover(Cover) :-
     printColorVector(Cover).
