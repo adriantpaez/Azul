@@ -135,3 +135,8 @@ printCover(Cover) :-
 printTable(Table) :-
     printColorVector(Table).
 
+printInitial(true) :-
+    printTile(initial),
+    printNewLine().
+
+printInitial(false).
