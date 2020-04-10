@@ -26,12 +26,14 @@ colorByIndex(1,amarillo).
 colorByIndex(2,rojo).
 colorByIndex(3,negro).
 colorByIndex(4,blanco).
+colorByIndex(5,initial).
 
 printTile(azul) :- ansi_format([bold,fg(blue)], '◼', []).
 printTile(amarillo) :- ansi_format([bold,fg(yellow)], '◼', []).
 printTile(rojo) :- ansi_format([bold,fg(red)], '◼', []).
 printTile(negro) :- ansi_format([bold,fg(black)], '◼', []).
 printTile(blanco) :- ansi_format([bold,fg(white)], '◼', []).
+printTile(initial) :- ansi_format([bold,fg(green)], '⬢', []).
 
 printEmptyTileColor(azul) :- ansi_format([bold,fg(blue)], '◻', []).
 printEmptyTileColor(amarillo) :- ansi_format([bold,fg(yellow)], '◻', []).

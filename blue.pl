@@ -6,6 +6,7 @@ getIndex(amarillo,1).
 getIndex(rojo,2).
 getIndex(negro,3).
 getIndex(blanco,4).
+getIndex(initial,5).
 
 % ==========
 % COLORTUPLE

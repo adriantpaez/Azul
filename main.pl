@@ -49,7 +49,7 @@ round([P1, P2, P3, P4], Factories, Cover, Table, TableR, CoverR, [PR1, PR2, PR3,
     printNewLine(),
     get_single_char(32),
     playerRound(P4, Factories, CoverT3, TableT3, TableR, CoverR, PT4, MaskT3, MaskR, Initial4),
-    penalizeInitial(PT4, Initial4, PR4)
+    penalizeInitial(PT4, Initial4, PR4),
     printplayerResult(PR4, Factories,MaskR),
     write("Cover: "),
     printCover(CoverR),
