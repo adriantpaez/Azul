@@ -85,6 +85,11 @@ floorPoint([[_,Value]|R],Points) :-
     floorPoint(R,RPoints),
     Points is RPoints + Value.
 
+floorLastSpace([[true, Points]|_], Points).
+
+floorLastSpace([[false, _]|R], Points):-
+    floorLastSpace(R, Points).
+
 %pushFloor(F, N, FR)
 %Coloca N azulejos en F y el resultado lo devuelve en FR
 %

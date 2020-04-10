@@ -68,10 +68,10 @@ checkInitial(_,_,_,true, 3).
 
 penalizeInitial(P, false, P).
 penalizeInitial([W, PL, F, Points], true, [W, PL, FR, PointsR]):-
-    pushFloor(F, [initial, 1], FR, _,_),
-    floorPoint(FR, PointsR).
-
-
+    pushFloor(F, [initial, 1], FR, _ ,_),
+    floorLastSpace(FR, PointsF),
+    PointsR is Points+PointsF.
+    
 play(Players, Factories, Bag, Cover, Table, Mask):-
     write("Bag: "),
     printBag(Bag),
