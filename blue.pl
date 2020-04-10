@@ -413,9 +413,10 @@ initializeGame(Factories,Bag,Cover, Table) :-
     makeNFactories(9,BagTemp,Factories,Bag),
     !.
 
-checkEmptyBag([BagCV,BagMask],Cover,BagResult,[],true) :-
+checkEmptyBag([BagCV,BagMask],Cover,BagResult,NewCover,true) :-
     length(BagMask,0),
     bagMergeWithColorVector(Cover,[BagCV,BagMask],BagResult),
+    coverEmpty(NewCover),
     !.
 
 checkEmptyBag([BagCV,BagMask],Cover,[BagCV,BagMask],Cover,false) :-
