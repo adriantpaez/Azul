@@ -7,6 +7,11 @@ inside(L,I) :-
     length(L,EC),
     I < EC.
 
+or([false], false).
+or([true|R], true).
+or([false|R], Or):-
+    or(R, Or).
+
 % getByIndex(L,I,E)
 % Devuelve en E el elemento que está en la posición I de L
 %
