@@ -90,7 +90,7 @@ floorLastSpace([[true, Points]|_], Points).
 floorLastSpace([[false, _]|R], Points):-
     floorLastSpace(R, Points).
 
-fullFloor([[false, _]|Floor], false).
+fullFloor([[false, _]|_], false).
 fullFloor([], true).
 fullFloor([[true,_]|Floor], Result):-
     fullFloor(Floor, Result).

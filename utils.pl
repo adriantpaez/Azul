@@ -8,7 +8,7 @@ inside(L,I) :-
     I < EC.
 
 or([false], false).
-or([true|R], true).
+or([true|_], true).
 or([false|R], Or):-
     or(R, Or).
 
