@@ -3,7 +3,7 @@
 :-["print.pl"].
 
 
-playerPlay([W, PL, _, Points], Factories, Table, TableR, Cover, CoverR, [WR, PLR, FR, PointsR], Mask, MaskR, Initial):-
+playerPlay([Id,W, PL, _, Points], Factories, Table, TableR, Cover, CoverR, [Id,WR, PLR, FR, PointsR], Mask, MaskR, Initial):-
     floorVector(F),
     %randomStrategy(PL, W, Factories, Table, TableR, Cover, CoverT, F, FR,PLT, Mask, MaskR, Initial),
     strategy(PL, W, Factories, Table, TableR, Cover, CoverT, F, FR,PLT, Mask, MaskR, Initial),
@@ -21,12 +21,12 @@ round([], _, Mask, Cover, Table, Mask, Cover, Table, [], CurrentInitial, Current
 
 
 round([Player|RPlayers], Factories, Mask, Cover, Table, MaskR, CoverR, TableR, [PlayerR|RPlayersR], CurrentInitial, NewInitial, false, EOG) :-
-    playerPlay(Player, Factories,Table, TableTemp, Cover, CoverTemp, [WR, PLR, FR, PointsR], Mask, MaskTemp, IsInitial),
+    playerPlay(Player, Factories,Table, TableTemp, Cover, CoverTemp, [Id,WR, PLR, FR, PointsR], Mask, MaskTemp, IsInitial),
     length(RPlayers,Length),
     Current is 3 - Length,
     printNewLine(),
     checkInitial(CurrentInitial, Current, IsInitial, NewInitialTemp, Penalize),
-    penalizeInitial([WR, PLR, FR, PointsR], Penalize, PlayerR),
+    penalizeInitial([Id, WR, PLR, FR, PointsR], Penalize, PlayerR),
     printplayerResult(PlayerR, Factories, MaskTemp),
     printInitial(IsInitial),
     printCover(CoverTemp),
@@ -46,7 +46,7 @@ checkInitial(Old,_,_,Old, false) :- !.
 
 
 penalizeInitial(P, false, P).
-penalizeInitial([W, PL, F, Points], true, [W, PL, FR, PointsR]):-
+penalizeInitial([Id,W, PL, F, Points], true, [Id, W, PL, FR, PointsR]):-
     fullFloor(F, false),
     pushFloor(F, [initial, 1], FR, _ ,_),
     floorLastSpace(FR, PointsF),

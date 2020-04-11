@@ -122,7 +122,11 @@ printBoard(Wall,PatternLines, Floor) :-
     printPatternLinesAndWall(0,PatternLines,Wall),
     printFloor(Floor).
 
-printplayerResult([W, PL, FL, Points], Factories, FactoryMask):-
+printPlayerId(Id) :-
+    ansi_format([], 'Player: ~w\n', [Id]).
+
+printplayerResult([Id, W, PL, FL, Points], Factories, FactoryMask):-
+    printPlayerId(Id),
     printFactories(Factories, FactoryMask),
     printBoard(W, PL, FL),
     write("Points: "),

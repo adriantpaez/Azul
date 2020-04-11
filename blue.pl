@@ -399,7 +399,7 @@ newPlayers(Players):-
     newPlayersN(Players, 0).
 
 newPlayersN(_, 4):-!.
-newPlayersN([[W, PL, F, 0]|Players], Count):-
+newPlayersN([[Count,W, PL, F, 0]|Players], Count):-
     newWall(W),
     initializePL(PL),
     floorVector(F),
