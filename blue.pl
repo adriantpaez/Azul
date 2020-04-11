@@ -183,8 +183,15 @@ columnPoints(W,I,TU,P) :-
 
 % wallPoints(W,I,P)
 % Deveuelve en P los puntos por jugar en la posición I de W
+
 wallPoints(W,I,0) :-
     getByIndex(W,I,0).
+
+wallPoints(W,I,1) :-
+    TU is I mod 5, 
+    columnPoints(W,I,TU,1), 
+    TL is (I//5) * 5, 
+    rowPoints(W,I,TL,1).
 
 wallPoints(W,I,P) :-
     TU is I mod 5, 

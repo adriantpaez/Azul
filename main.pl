@@ -1,10 +1,12 @@
 :-["strategy.pl"].
+:-["strategy2.pl"].
 :-["print.pl"].
 
 
 playerPlay([W, PL, _, Points], Factories, Table, TableR, Cover, CoverR, [WR, PLR, FR, PointsR], Mask, MaskR, Initial):-
     floorVector(F),
-    randomStrategy(PL, W, Factories, Table, TableR, Cover, CoverT, F, FR,PLT, Mask, MaskR, Initial),
+    %randomStrategy(PL, W, Factories, Table, TableR, Cover, CoverT, F, FR,PLT, Mask, MaskR, Initial),
+    strategy(PL, W, Factories, Table, TableR, Cover, CoverT, F, FR,PLT, Mask, MaskR, Initial),
     fromPLToWall(PLT, PLR, W, WR, CoverT, CoverR, FR, Points, PointsR).
 
 
