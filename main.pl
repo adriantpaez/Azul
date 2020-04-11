@@ -10,7 +10,7 @@ playerPlay([Id,W, PL, _, Points], Factories, Table, TableR, Cover, CoverR, [Id,W
     fromPLToWall(PLT, PLR, W, WR, CoverT, CoverR, FR, Points, PointsR).
 
 
-round(_, _, _, _, _, _, _, _, _, _, _,true, true) :-
+round(RPlayers, _, _, _, _, _, _, _, RPlayers, _, _,true, true) :-
     write('El juego ha terminado \n'),
     !.
 
@@ -59,6 +59,7 @@ play(Players, Factories, Bag, Cover, Table, Mask):-
     printFactories(Factories,[0,1,2,3,4,5,6,7,8]),
     round(Players, Factories, Mask, Cover, Table, MaskT, CoverT, TableR, PlayersT, Initial, EOG),
     fixInitial(Initial,NewInitial),
+    printFinal(EOG, PlayersT),
     check(EOG),
     removeEmptyFactories(Factories, MaskT,FactoriesT),
     nextRound(FactoriesT,Bag,CoverT,FactoriesR,BagR,CoverR),

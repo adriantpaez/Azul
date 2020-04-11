@@ -107,7 +107,9 @@ printPatternLinesAndWall(Row,[PL|PLR],[A0,A1,A2,A3,A4|R]) :-
     printPatternLinesAndWall(NewRow,PLR,R),
     !.
 
-printFloor([]) :- !.
+printFloor([]) :-
+    printSpace(2),
+    !.
 
 printFloor([[false,_]|R]) :-
     ansi_format([bold], '◻', []),
@@ -155,3 +157,15 @@ printInitial(true) :-
     printNewLine().
 
 printInitial(false).
+
+printFinal([]) :- !.
+
+printFinal([[Id,_,_,_,Points]|RP]) :-
+    ansi_format([], 'Player ~w: ~w\n', [Id, Points]),
+    printFinal(RP).
+
+printFinal(false,_) :- !.
+
+printFinal(true, PlayersT) :-
+    printFinal(PlayersT).
+
