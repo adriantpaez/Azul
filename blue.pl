@@ -132,6 +132,59 @@ newWallN([0|WallR], N):-
 
 %chequea si el juego ha llegado a su fin verificando si hay una linea horizontal entera de 1s.
 
+checkRow(Wall, 5, false, Wall, 0) :- !.
+
+checkRow(Wall, 5, true, Wall, 1) :- !.
+
+checkRow([0|R], Count, _,WallResult, Result) :-
+    NewCount is Count + 1,
+    checkRow(R, NewCount, false, WallResult, Result).
+
+checkRow([1|R], Count, false,WallResult, Result) :-
+    NewCount is Count + 1,
+    checkRow(R, NewCount, false, WallResult, Result).
+
+checkRow([1|R], Count, true,WallResult, Result) :-
+    NewCount is Count + 1,
+    checkRow(R, NewCount, true, WallResult, Result).
+
+wallCountHorizontal(Wall, Count) :-
+    checkRow(Wall,0,true,Wall1,C1),
+    checkRow(Wall1,0,true,Wall2,C2),
+    checkRow(Wall2,0,true,Wall3,C3),
+    checkRow(Wall3,0,true,Wall4,C4),
+    checkRow(Wall4,0,true,_,C5),
+    Count is C1 + C2 + C3 + C4 + C5,
+    !.
+
+myAnd(true, true, true) :- !.
+
+myAnd(_,_, false).
+
+countTrue([],0) :- !.
+
+countTrue([false|R],Count) :-
+    countTrue(R, Count).
+
+countTrue([true|R],Count) :-
+    countTrue(R, TempCount),
+    Count is TempCount + 1.
+
+countColumns(_,5,[RA,RB,RC,RD,RE],Count) :-
+    countTrue([RA,RB,RC,RD,RE],Count).
+
+countColumns([A,B,C,D,E|R], Index, [LA,LB,LC,LD,LE], Count) :-
+    myAnd(A,LA,RA),
+    myAnd(B,LB,RB),
+    myAnd(C,LC,RC),
+    myAnd(D,LD,RD),
+    myAnd(E,LE,RE),
+    NewIndex is Index + 1,
+    countColumns(R, NewIndex, [RA,RB,RC,RD,RE], Count).
+
+countColumns(Wall,Count) :-
+    countColumns(Wall,0,[true,true,true,true,true],Count).
+
 checkEOG(W, R):-
     checkEndOfGame(W, R, 0).
 
@@ -451,5 +504,7 @@ nextRound(Factories,Bag,Cover,FactoriesResult,BagResult,CoverResult) :-
     checkEmptyBag([TempBagCV,TempBagMask], Cover,BagR, CoverR,Result),
     nextRoundContinue(Result,TempFactories,BagR,CoverR,FactoriesResult,BagResult,CoverResult).
 
-
-    
+finalPoints(Wall,Points) :-
+    wallCountHorizontal(Wall,Rows),
+    countColumns(Wall,Columns),
+    Points is Rows * 2 + Columns * 7.

@@ -160,8 +160,10 @@ printInitial(false).
 
 printFinal([]) :- !.
 
-printFinal([[Id,_,_,_,Points]|RP]) :-
-    ansi_format([], 'Player ~w: ~w\n', [Id, Points]),
+printFinal([[Id,W,_,_,Points]|RP]) :-
+    finalPoints(W,FP),
+    NewPoints is Points + FP,
+    ansi_format([], 'Player ~w: ~w\n', [Id, NewPoints]),
     printFinal(RP).
 
 printFinal(false,_) :- !.
