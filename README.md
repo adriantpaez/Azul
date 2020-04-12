@@ -1,6 +1,36 @@
 
 # Azul
 
+## Estrategia
+
+La estrategia implementada para los jugadores se basa en un punto de vista **greedy**. En cada turno, el jugador va a tomar la jugada que más puntos sume en ese instante de tiempo. Si hay varias jugadas que generan la misma cantidad de puntos, entonces se queda con la primera que consultó. El orden para consultar las jugadas es:
+
+1. Posibles jugadas tomando de las factorías, respetando el orden de las factorías
+
+2. Posibles jugadas tomando del centro de la mesa
+
+## Iniciar la partida
+
+Para iniciar la aprtida es neceario abrir una terminal con prolog en la carpeta del proyecto y seguir los siguientes pasos:
+
+1. Importa el archivo principal:
+```
+?- consult('main.pl).
+```
+
+2. Iniciar la ejecución del juegoÑ
+```
+?- game.
+```
+
+El juego no se ejecuta de una vez completamente, se detiene en cada jugada a la espera que se presione cualquier tecla para continuar a la próxima jugada. Si desea que se ejecute rápidamente deje presionada cualquier tecla hasta que el juego llegue al final.
+
+En cada jugada se muestra la siguiente información en la terminal:
+
+![](img/info.png)
+
+Donde se muestra el identificador del jugador, el estado de las factorías, las líneas de patrones, el muro, el piso, los puntos acumulados, la tapa del juego y el centro de la mesa.
+
 ## Tipos y estructuras
 
 ### COLOR
